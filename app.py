@@ -101,7 +101,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 pipe = QwenImageEditPlusPipeline.from_pretrained(
     "Qwen/Qwen-Image-Edit-2509",
     transformer=QwenImageTransformer2DModel.from_pretrained(
-        "linoyts/Qwen-Image-Edit-Rapid-AIO",
+        "linoyts/Qwen-Image-Edit-Rapid-AIO", # [transformer weights extracted from: Phr00t/Qwen-Image-Edit-Rapid-AIO]
         subfolder='transformer',
         torch_dtype=dtype,
         device_map='cuda'
@@ -134,6 +134,7 @@ pipe.load_lora_weights("vafipas663/Qwen-Edit-2509-Upscale-LoRA",
                        weight_name="qwen-edit-enhance_64-v3_000001000.safetensors",
                        adapter_name="upscale-image")
 
+
 pipe.transformer.set_attn_processor(QwenDoubleStreamAttnProcessorFA3())
 MAX_SEED = np.iinfo(np.int32).max
 
@@ -158,7 +159,7 @@ def update_dimensions_on_upload(image):
     
     return new_width, new_height
 
-@spaces.GPU(duration=60)
+@spaces.GPU(duration=30)
 def infer(
     input_image,
     prompt,
@@ -213,7 +214,7 @@ def infer(
 
     return result, seed
 
-@spaces.GPU(duration=60)
+@spaces.GPU(duration=30)
 def infer_example(input_image, prompt, lora_adapter):
     input_pil = input_image.convert("RGB")
     guidance_scale = 1.0
@@ -230,7 +231,7 @@ css="""
 #main-title h1 {font-size: 2.1em !important;}
 """
 
-with gr.Blocks(css=css, theme=steel_blue_theme) as demo:
+with gr.Blocks() as demo:
     with gr.Column(elem_id="col-container"):
         gr.Markdown("# **Qwen-Image-Edit-2509-LoRAs-Fast**", elem_id="main-title")
         gr.Markdown("Perform diverse image edits using specialized [LoRA](https://huggingface.co/models?other=base_model:adapter:Qwen/Qwen-Image-Edit-2509) adapters for the [Qwen-Image-Edit](https://huggingface.co/Qwen/Qwen-Image-Edit-2509) model.")
@@ -292,5 +293,6 @@ with gr.Blocks(css=css, theme=steel_blue_theme) as demo:
         inputs=[input_image, prompt, lora_adapter, seed, randomize_seed, guidance_scale, steps],
         outputs=[output_image, seed]
     )
-    
-demo.launch(mcp_server=True, ssr_mode=False, show_error=True)
+
+if __name__ == "__main__":
+    demo.queue(max_size=30).launch(css=css, theme=steel_blue_theme, mcp_server=True, ssr_mode=False, show_error=True)
