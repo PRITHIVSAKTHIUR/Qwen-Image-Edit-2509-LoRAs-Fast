@@ -7,5 +7,6 @@ transformers
 torchvision
 kernels
 spaces
+gradio
 torch
 numpy
