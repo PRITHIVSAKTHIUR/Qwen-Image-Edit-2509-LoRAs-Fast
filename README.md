@@ -101,10 +101,17 @@ gradio
 Pillow
 ```
 
-**Hardware Notes**:
-- GPU recommended (NVIDIA with CUDA 11.8+ for optimal performance).
-- ~8GB VRAM minimum for bfloat16 mode.
-- On CPU, inference will be slower; set `device='cpu'` in code.
+## Hardware & Environment Requirements
+
+| Component | Requirement | Details from Log |
+| :--- | :--- | :--- |
+| **GPU Model** | NVIDIA Enterprise (H200 / H100 / A100) | Tested on `NVIDIA H200 MIG 3g.71gb` |
+| **VRAM** | **80 GB Recommended** (Min 71 GB) | Peak tensor packing reached **60.8 GB** |
+| **System RAM** | 128 GB+ | Required to handle model offloading/loading overhead |
+| **Disk Space** | ~60 GB+ | Transformer (~20GB) + Text Encoders (~17GB) + LoRAs |
+| **Python** | v3.13 | Detected `cpython-313` |
+| **PyTorch** | v2.9.1 | `2.9.1+cu128` |
+| **CUDA** | v12.8 | `torch.version.cuda = 12.8` |
 
 ## Usage
 
