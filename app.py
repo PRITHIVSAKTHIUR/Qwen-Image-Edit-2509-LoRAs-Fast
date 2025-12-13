@@ -9,27 +9,27 @@ from typing import Iterable
 from gradio.themes import Soft
 from gradio.themes.utils import colors, fonts, sizes
 
-colors.steel_blue = colors.Color(
-    name="steel_blue",
-    c50="#EBF3F8",
-    c100="#D3E5F0",
-    c200="#A8CCE1",
-    c300="#7DB3D2",
-    c400="#529AC3",
-    c500="#4682B4",
-    c600="#3E72A0",
-    c700="#36638C",
-    c800="#2E5378",
-    c900="#264364",
-    c950="#1E3450",
+colors.orange_red = colors.Color(
+    name="orange_red",
+    c50="#FFF0E5",
+    c100="#FFE0CC",
+    c200="#FFC299",
+    c300="#FFA366",
+    c400="#FF8533",
+    c500="#FF4500",
+    c600="#E63E00",
+    c700="#CC3700",
+    c800="#B33000",
+    c900="#992900",
+    c950="#802200",
 )
 
-class SteelBlueTheme(Soft):
+class OrangeRedTheme(Soft):
     def __init__(
         self,
         *,
         primary_hue: colors.Color | str = colors.gray,
-        secondary_hue: colors.Color | str = colors.steel_blue,
+        secondary_hue: colors.Color | str = colors.orange_red,
         neutral_hue: colors.Color | str = colors.slate,
         text_size: sizes.Size | str = sizes.text_lg,
         font: fonts.Font | str | Iterable[fonts.Font | str] = (
@@ -56,8 +56,8 @@ class SteelBlueTheme(Soft):
             button_primary_text_color_hover="white",
             button_primary_background_fill="linear-gradient(90deg, *secondary_500, *secondary_600)",
             button_primary_background_fill_hover="linear-gradient(90deg, *secondary_600, *secondary_700)",
-            button_primary_background_fill_dark="linear-gradient(90deg, *secondary_600, *secondary_800)",
-            button_primary_background_fill_hover_dark="linear-gradient(90deg, *secondary_500, *secondary_500)",
+            button_primary_background_fill_dark="linear-gradient(90deg, *secondary_600, *secondary_700)",
+            button_primary_background_fill_hover_dark="linear-gradient(90deg, *secondary_500, *secondary_600)",
             button_secondary_text_color="black",
             button_secondary_text_color_hover="white",
             button_secondary_background_fill="linear-gradient(90deg, *primary_300, *primary_300)",
@@ -75,7 +75,7 @@ class SteelBlueTheme(Soft):
             block_label_background_fill="*primary_200",
         )
 
-steel_blue_theme = SteelBlueTheme()
+orange_red_theme = OrangeRedTheme()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -133,7 +133,6 @@ pipe.load_lora_weights("lovis93/next-scene-qwen-image-lora-2509",
 pipe.load_lora_weights("vafipas663/Qwen-Edit-2509-Upscale-LoRA",
                        weight_name="qwen-edit-enhance_64-v3_000001000.safetensors",
                        adapter_name="upscale-image")
-
 
 pipe.transformer.set_attn_processor(QwenDoubleStreamAttnProcessorFA3())
 MAX_SEED = np.iinfo(np.int32).max
@@ -249,7 +248,7 @@ with gr.Blocks() as demo:
                 run_button = gr.Button("Edit Image", variant="primary")
 
             with gr.Column():
-                output_image = gr.Image(label="Output Image", interactive=False, format="png", height=350)
+                output_image = gr.Image(label="Output Image", interactive=False, format="png", height=353)
                 
                 with gr.Row():
                     lora_adapter = gr.Dropdown(
@@ -295,4 +294,4 @@ with gr.Blocks() as demo:
     )
 
 if __name__ == "__main__":
-    demo.queue(max_size=30).launch(css=css, theme=steel_blue_theme, mcp_server=True, ssr_mode=False, show_error=True)
+    demo.queue(max_size=30).launch(css=css, theme=orange_red_theme, mcp_server=True, ssr_mode=False, show_error=True)
